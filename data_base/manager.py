@@ -1,65 +1,63 @@
 import asyncio
 from sqlalchemy import select, update, delete, insert
 
-from data_base.db import async_session
+from data_base.db import get_session
 from data_base.models import User, Category
 
 
-class CategoryManager:
+class CategoryManager():
     def __init__(self):
-        self.session = async_session()
         self.model = Category
+        self.session = get_session()
 
-    async def fill_category(self, data):
-        '''заполнение категорий через ф-ию считывающую список категорий из файла из файла'''
+    def insert_category(self, data):
+        '''добавление в базу новой категории'''
         inserts = []
-        async with self.session as session:
-            for category in data:
-                inserts.append(
-                    Category(
-                        name=category[0],
-                    )
-                )
-            session.add_all(inserts)
-            await session.commit()
-            await session.close()
 
-    async def get_all_category(self):
-        async with self.session as session:
-            result = await session.execute(select(self.model))
-            await session.commit()
-            await session.close()
-            return result.scalars()
+        for category in data: # data список категорий из csv файла
+            inserts.append(
+                Category(
+                    name=category[0]
+                )
+            )
+        self.session.add_all(inserts)
+        self.session.commit()
+        self.session.close()
+
+    def get_all_categories(self):
+        '''получение всех категорий из базы'''
+        results = self.session.query(self.model).all()
+        self.session.close()
+        return results
 
 
 class UserManager:
     def __init__(self):
-        self.session = async_session()
+        self.session = get_session()
         self.model = User
 
-    async def add_user(self, id: int, points: int = 0):
-        async with self.session as session:
-            user = self.model(user_tg_id=id, points=points)
-            session.add(user)
-            await session.commit()
-            await session.close()
+    def add_user(self, user_tg_id: int, points: int = 0):
 
-    async def get_user(self, user_tg_id: int):
-        async with self.session as session:
-            user = await session.execute(select(self.model).where(self.model.user_tg_id==user_tg_id))
-            await session.commit()
-            await session.close()
-        return user.scalars().first()
+        user = self.model(user_tg_id=user_tg_id, points=points)
+        self.session.add(user)
+        self.session.commit()
+        self.session.close()
 
-    async def update_points_user(self, user_tg_id: int, points: int):
-        async with async_session() as session:
-            await session.execute(update(self.model).where(self.model.user_tg_id == user_tg_id).values(points=points))
-            await session.commit()
-            await session.close()
+    def get_user(self, user_tg_id: int):
+        user = self.session.query(self.model).filter(User.user_tg_id==user_tg_id).first()
+        self.session.close()
+        return user
+
+    def update_points_user(self, user_tg_id: int, points: int):
+        user = self.session.query(self.model).filter(self.model.user_tg_id == user_tg_id).first()
+        user.points = points
+        self.session.add(user)
+        self.session.commit()
+        self.session.close()
 
 
 
 if __name__ == '__main__':
-    user = UserManager()
-    asyncio.run(user.add_user(1111, 123))
+    user = UserManager().add_user(12345678, 1000)
+    print(user)
 

@@ -26,21 +26,21 @@ async def get_user(user_tg_id):
         user = await session.execute(select(User).where(User.user_tg_id == user_tg_id))
         await session.commit()
         await session.close()
-    return user.scalars().first()
+    return user.scalars()
 
 
 async def update_points_user(user_tg_id, points):
     async with async_session() as session:
         await session.execute(update(User).where(User.user_tg_id == user_tg_id).values(points=points))
         await session.commit()
-        await session.close()
+        # await session.close()
 
 
 
 
 if __name__ == '__main__':
-    # a1 = asyncio.run(get_user(12345))
-    # print(a1.points)
-    # asyncio.run(add_user(1234567))
+    a1 = asyncio.run(get_user(1234567))
+    print(a1.__dict__)
+    # asyncio.run(update_points_user(1234567, 200))
     pass
 

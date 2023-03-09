@@ -2,7 +2,7 @@ from sqlalchemy import (
     Column, Integer, String, BigInteger, UnicodeText, Text, ForeignKey
 )
 
-from data_base.db import Base, async_engine
+from data_base.db import Base, engine
 
 
 class User(Base):
@@ -35,18 +35,6 @@ class Question(Base):
     answer = Column(Text, nullable=False)
     category = Column(Integer, ForeignKey('category.id'), nullable=False)
 
-
-async def init_models():
-    '''создание моделей'''
-    async with async_engine.begin() as conn:
-        # await conn.run_sync(Base.metadata.drop_all)
-        await conn.run_sync(Base.metadata.create_all)
-
-async def delet_models():
-    '''Удаление моделей'''
-    async with async_engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
-        # await conn.run_sync(Base.metadata.create_all)
 
 if __name__ == '__main__':
     pass

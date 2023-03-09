@@ -1,4 +1,4 @@
-from aiogram import Dispatcher, Bot, types, executor
+from aiogram import Dispatcher, Bot
 
 from config import TOKEN
 from bot_utils.handlers import start_cmd, start_game_cmd

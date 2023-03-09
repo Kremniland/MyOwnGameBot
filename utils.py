@@ -1,20 +1,28 @@
 import csv
-import asyncio
 
 from data_base.manager import CategoryManager
 
 
-async def fill_category_data(filename: str):
-    '''считывание категорий из файла и через менеджер категорий заполнение базы'''
-    with open(filename, 'r', encoding='utf-8') as file:
-        rows = csv.reader(file, delimiter=',')
-        await CategoryManager().fill_category(rows)
-    #     lst = []
-    #     for row in rows:
-    #         lst.append(row)
-    # return lst
+def fill_category_data(filename):
+    '''заполняем данные в категории из csv файл'''
+    with open(filename, 'r', encoding='utf-8') as csv_file:
+        rows = csv.reader(csv_file, delimiter=',')
+        # for i in rows:
+        #     print(i)
+        CategoryManager().insert_category(rows)
 
 
+# def fill_films_data(filename):
+#     '''заполняем данные в модель фильмы'''
+#     with open(filename, 'r', encoding='utf-8') as file:
+#         rows = csv.reader(file, delimiter=',')
+#         # for row in rows:
+#         #     print(row)
+#         FilmManager().insert_film(rows)
 
-if __name__ == '__main__':
-    asyncio.run(fill_category_data('data_files/category_data.csv'))
+
+# if __name__ == '__main__':
+    # fill_category_data('data_files/category_data.csv')
+    # fill_films_data('data_files/emojies.csv')
+
+

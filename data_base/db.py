@@ -1,24 +1,16 @@
-import asyncio
-
-from sqlalchemy import (
-    Column, Integer, String, BigInteger, UnicodeText, Text, ForeignKey, Float
-)
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy import select
+from sqlalchemy import create_engine
 
-from config import ASYNC_DB_URL
+from config import DB_URL
 
+engine = create_engine(DB_URL, echo=True)
 Base = declarative_base()
+Session = sessionmaker(autocommit=False, bind=engine, autoflush=True) # создание подключения к бд
+session = Session()
 
-async_engine = create_async_engine(
-    ASYNC_DB_URL,
-    echo=True,
-)
-
-async_session = sessionmaker(async_engine, expire_on_commit=False, class_=AsyncSession)
-
+def get_session():
+    return session
 
 if __name__ == '__main__':
     pass

@@ -8,7 +8,6 @@ class RedisClient:
         self.client = self._get_redis_client()
 
     @staticmethod
-    @staticmethod
     def _get_redis_client():
         '''создаем подключение'''
         try:
@@ -23,8 +22,23 @@ class RedisClient:
             print(e)
             raise Exception
 
+    def cache_user_data(self, user_tg_id, data):
+        self.client.hmset(user_tg_id, mapping=data)
+
+    def get_user_date(self, user_tg_id):
+        return self.client.hgetall(user_tg_id)
+
+    def del_user_data(self, user_tg_id):
+        self.client.delete(user_tg_id)
+
 
 redis_client = RedisClient()
 
 if __name__ == '__main__':
-    print(redis_client)
+
+    redis_client.cache_user_data(123, {'category': 87})
+    # data = redis_client.get_user_date(123)
+    data = redis_client.del_user_data(123)
+    print(data)
+
+

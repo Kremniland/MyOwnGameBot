@@ -36,6 +36,16 @@ class Question(Base):
     category = Column(Integer, ForeignKey('category.id'), nullable=False)
 
 
+class UserGuessedQuestion(Base):
+    __tablename__ = 'user_guessed_question'
+    id = Column(Integer,
+                primary_key=True,
+                autoincrement=True,
+                unique=True)
+    user_tg_id = Column(Integer, nullable=False)
+    question = Column(Integer, ForeignKey('question.id'), nullable=False)
+
+
 if __name__ == '__main__':
     pass
 

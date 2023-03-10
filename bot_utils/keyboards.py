@@ -8,7 +8,7 @@ def categories_ikb():
     markup = types.InlineKeyboardMarkup(width=1)
     for category in categories:
         markup.add(types.InlineKeyboardButton(category.name, callback_data=f'category_{category.id}'))
-    markup.add(types.InlineKeyboardButton('Смешанные вопросы', callback_data=f'category_all'))
+    # markup.add(types.InlineKeyboardButton('Смешанные вопросы', callback_data=f'category_all'))
     return markup
 
 if __name__ == '__main__':

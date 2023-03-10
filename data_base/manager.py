@@ -112,16 +112,21 @@ class GuessedQuestionManager():
         self.session.close()
 
     def get_guessed_question(self, user_tg_id):
-        results = self.session.query(self.model.id).filter(
+        results = self.session.query(self.model.question).filter(
             self.model.user_tg_id==user_tg_id
         )
-        return results
+        lst_ids = []
+        for i in results:
+            lst_ids.append(i[0])
+        return lst_ids
 
 
 if __name__ == '__main__':
-    ids = []
+    ids = [1,2,3]
     rand_q = QuestionManager().get_random_question(ids, 1)
-    print(rand_q.id)
+    print(rand_q)
+    lst = GuessedQuestionManager().get_guessed_question(1494947085)
+    print(lst)
     # q = get_session().query(Question).filter(
     #     not_(Question.id.in_(ids)),
     #     Question.category == 1
